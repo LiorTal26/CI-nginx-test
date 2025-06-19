@@ -1,9 +1,10 @@
 pipeline {
     agent any
+
     environment {
         IMAGE_NAME = 'liortal26/my-nginx'
-        IMAGE_TAG  = ''
     }
+
     stages {
         stage('Clone') {
             steps {
@@ -11,23 +12,19 @@ pipeline {
             }
         }
 
-        stage('Create Tag by Date') {
+        stage('create tag by date') {
             steps {
                 script {
-                    def tag = sh(
-                        script: "date +'%y%m%d%H%M'",
-                        returnStdout: true
-                    ).trim()
-                    env.IMAGE_TAG = tag
+                    env.IMAGE_TAG = sh(script: "date +'%y%m%d%H%M'",returnStdout: true).trim()
                 }
                 echo "Using tag: ${env.IMAGE_TAG}"
             }
         }
 
-        stage('Docker Login') {
+        stage('docker login with token') {
             steps {
                 withCredentials([ 
-                    string(credentialsId: 'docker-token', variable: 'DOCKERHUB_TOKEN') 
+                    string(credentialsId: 'docker-token2', variable: 'DOCKERHUB_TOKEN') 
                 ]) {
                     sh '''
                         echo "$DOCKERHUB_TOKEN" | \
