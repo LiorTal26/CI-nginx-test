@@ -1,0 +1,52 @@
+---
+- name: ensure  SNMP and nginx is installed, add 3 users and change nginx port
+  hosts: my-server
+  become: yes
+
+  vars:
+    nginx_port: 8090
+
+  tasks:
+
+    - name: Refresh apt cache
+      apt:
+        update_cache: yes
+
+    - name: Install required packages
+      apt:
+        name:
+          - snmpd
+          - nginx
+        state: present
+        update_cache: yes
+
+    - name: Create system users
+      user:
+        name: "{{ item }}"
+        shell: /bin/bash
+        state: present
+      loop:
+        - avi
+        - moshe
+        - yoel
+
+    - name: Print nginx port configuration
+      debug:
+        msg: "Nginx will listen on port {{ nginx_port }}"
+
+    - name: Deploy nginx configuration
+      template:
+        src: ./nginx.conf.j2
+        dest: /etc/nginx/sites-available/default
+        owner: root
+        group: root
+        mode: '0644'
+      vars:
+        listen_port: "{{ nginx_port }}"
+      notify: Reload nginx
+
+  handlers:
+    - name: Reload nginx
+      service:
+        name: nginx
+        state: reloaded
