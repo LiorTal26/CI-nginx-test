@@ -21,18 +21,23 @@ pipeline {
             }
         }
 
-        stage('docker login with token') {
+       stage('Docker Login with Username/Password') {
             steps {
-                withCredentials([ 
-                    string(credentialsId: 'docker-token', variable: 'DOCKERHUB_TOKEN') 
-                ]) {
-                    sh '''
-                        echo "$DOCKERHUB_TOKEN" | \
-                        docker login -u "liortal26" --password-stdin
-                    '''
-                }
-            }
+                withCredentials([
+                    usernamePassword(
+                    credentialsId: 'docker-token',
+                    usernameVariable: 'DOCKERHUB_USER',
+                    passwordVariable: 'DOCKERHUB_PASS'
+                )
+                        ]) {
+            sh '''
+                echo "$DOCKERHUB_PASS" | \
+                docker login -u "$DOCKERHUB_USER" --password-stdin
+            '''
         }
+    }
+}
+
 
         stage('Build & Push') {
             steps {
