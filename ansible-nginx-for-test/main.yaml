@@ -15,7 +15,7 @@
     - name: Install required packages
       apt:
         name:
-          - snmpd
+          - net-snmp
           - nginx
         state: present
         update_cache: yes
