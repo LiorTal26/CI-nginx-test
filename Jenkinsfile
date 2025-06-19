@@ -24,7 +24,7 @@ pipeline {
         stage('docker login with token') {
             steps {
                 withCredentials([ 
-                    string(credentialsId: 'docker-token2', variable: 'DOCKERHUB_TOKEN') 
+                    string(credentialsId: 'docker-token', variable: 'DOCKERHUB_TOKEN') 
                 ]) {
                     sh '''
                         echo "$DOCKERHUB_TOKEN" | \
@@ -37,8 +37,8 @@ pipeline {
         stage('Build & Push') {
             steps {
                 sh """
-                    docker build -t ${IMAGE_NAME}:${IMAGE_TAG} .
-                    docker push ${IMAGE_NAME}:${IMAGE_TAG}
+                     docker build -t ${IMAGE_NAME}:${IMAGE_TAG} .
+                     docker push ${IMAGE_NAME}:${IMAGE_TAG}
                 """
             }
         }
