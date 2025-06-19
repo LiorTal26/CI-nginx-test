@@ -2,6 +2,7 @@ pipeline {
     agent any
     environment {
         IMAGE_NAME = 'liortal26/my-nginx'
+        IMAGE_TAG = ''
     }
     stages {
         stage('Clone Repository') {
@@ -12,7 +13,7 @@ pipeline {
         stage('Create Tag by Date') {
             steps {
                 script {
-                    IMAGE_TAG = sh(script: "date +'%y%m%d%H%M'", returnStdout: true).trim()
+                    env.IMAGE_TAG = sh(script: "date +'%y%m%d%H%M'", returnStdout: true).trim()
                 }
             }
         }
