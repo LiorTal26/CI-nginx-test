@@ -4,12 +4,12 @@ pipeline {
         IMAGE_NAME = 'liortal26/my-nginx'
     }
     stages {
-        stage('Checkout') {
+        stage('Clone Repository') {
             steps {
-                checkout scm
+                git url: 'https://github.com/LiorTal26/CI-nginx-test.git', branch: 'main'
             }
         }
-        stage('create tag by date') {
+        stage('Create Tag by Date') {
             steps {
                 script {
                     IMAGE_TAG = sh(script: "date +'%y%m%d%H%M'", returnStdout: true).trim()
